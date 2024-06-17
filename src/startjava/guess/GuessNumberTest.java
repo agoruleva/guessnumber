@@ -3,6 +3,11 @@ package startjava.guess;
 import java.util.Scanner;
 
 public class GuessNumberTest {
+    private static final String PROMPT = "Хотите продолжить игру? [yes/no]: ";
+    private static final String ALT_PROMPT = "Введите корректный ответ [yes/no]: ";
+    private static final String NO = "no";
+    private static final String YES = "yes";
+
     private final Scanner scanner = new Scanner(System.in);
     private final GuessNumber guessNumber;
 
@@ -19,18 +24,18 @@ public class GuessNumberTest {
     }
 
     public void run() {
+        String answer = YES;
         do {
+            if (!YES.equals(answer)) {
+                continue;
+            }
             guessNumber.play();
-        } while ("yes".equals(askToContinue()));
+        } while (!NO.equals(answer = askToContinue(answer)));
     }
 
-    private String askToContinue() {
-        String answer;
-        do {
-            System.out.print("Хотите продолжить игру? [yes/no]: ");
-            answer = scanner.next().toLowerCase();
-        } while (!("yes".equals(answer) || "no".equals(answer)));
-        return answer;
+    private String askToContinue(String previous) {
+        System.out.print(YES.equals(previous) ? PROMPT : ALT_PROMPT);
+        return scanner.next().toLowerCase();
     }
 
     public static void main(String[] args) {
