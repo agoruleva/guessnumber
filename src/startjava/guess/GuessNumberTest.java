@@ -13,14 +13,14 @@ public class GuessNumberTest {
 
     public GuessNumberTest() {
         System.out.println("Представьтесь, пожалуйста:");
-        Player firstPlayer = askName(1);
-        Player secondPlayer = askName(2);
-        guessNumber = new GuessNumber(firstPlayer, secondPlayer, scanner);
+        String firstName = askName(1);
+        String secondName = askName(2);
+        guessNumber = new GuessNumber(firstName, secondName, scanner);
     }
 
-    private Player askName(int playerNumber) {
+    private String askName(int playerNumber) {
         System.out.print(playerNumber + ". ");
-        return new Player(scanner.nextLine());
+        return scanner.nextLine();
     }
 
     public void run() {

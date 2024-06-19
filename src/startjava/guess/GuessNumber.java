@@ -9,9 +9,9 @@ public class GuessNumber {
     private final Scanner scanner;
     private final Random random;
 
-    public GuessNumber(Player firstPlayer, Player secondPlayer, Scanner scanner) {
-        this.firstPlayer = firstPlayer;
-        this.secondPlayer = secondPlayer;
+    public GuessNumber(String firstName, String secondName, Scanner scanner) {
+        this.firstPlayer = new Player(firstName);
+        this.secondPlayer = new Player(secondName);
         this.scanner = scanner;
         this.random = new Random();
     }
