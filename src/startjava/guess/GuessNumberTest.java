@@ -34,7 +34,7 @@ public class GuessNumberTest {
     }
 
     private String askToContinue(String previous) {
-        System.out.print(YES.equals(previous) ? PROMPT : ALT_PROMPT);
+        System.out.printf("%n%s", YES.equals(previous) ? PROMPT : ALT_PROMPT);
         return scanner.next().toLowerCase();
     }
 
