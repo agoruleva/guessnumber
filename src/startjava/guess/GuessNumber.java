@@ -25,10 +25,11 @@ public class GuessNumber {
         do {
             number = askNumber(currentPlayer);
             currentPlayer.saveAttempt(number);
-            if (number == computerNumber) {
+            CheckResult checkResult = checkPlayerNumber(number);
+            if (checkResult == CheckResult.EQUALS) {
                 displayVictoryMessage(currentPlayer);
             } else {
-                displayHelp(number);
+                displayHelp(number, checkResult);
                 if (!currentPlayer.hasAttempts()) {
                     displayLostMessage(currentPlayer);
                 }
@@ -50,17 +51,18 @@ public class GuessNumber {
         return scanner.nextInt();
     }
 
+    private CheckResult checkPlayerNumber(int number) {
+        return number == computerNumber ? CheckResult.EQUALS
+                : (number < computerNumber ? CheckResult.LESS : CheckResult.GREATER);
+    }
+
     private void displayVictoryMessage(Player player) {
         System.out.printf("%s угадал число %d с %d-й попытки%n",
                 player.getName(), computerNumber, player.getCount());
     }
 
-    private void displayHelp(int number) {
-        if (number < computerNumber) {
-            System.out.printf("Число %d меньше того, что загадал компьютер%n", number);
-        } else {
-            System.out.printf("Число %d больше того, что загадал компьютер%n", number);
-        }
+    private void displayHelp(int number, CheckResult result) {
+        System.out.printf("Число %d %s того, что загадал компьютер%n", number, result);
     }
 
     private static void displayLostMessage(Player player) {
