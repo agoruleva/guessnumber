@@ -5,6 +5,10 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class GuessNumber {
+    private static final String ORDINAL_PROMPT = "%n%s, ваш ход: ";
+    private static final String PROMPT_ON_ERROR = "Попробуйте ещё раз: ";
+
+    private final NumberValidation validation;
     private final Player firstPlayer;
     private final Player secondPlayer;
     private final Scanner scanner;
@@ -12,8 +16,9 @@ public class GuessNumber {
     private int computerNumber;
 
     public GuessNumber(String firstName, String secondName, Scanner scanner) {
-        this.firstPlayer = new Player(firstName);
-        this.secondPlayer = new Player(secondName);
+        this.validation = new NumberValidation();
+        this.firstPlayer = new Player(firstName, validation);
+        this.secondPlayer = new Player(secondName, validation);
         this.scanner = scanner;
         this.random = new Random();
     }
@@ -21,10 +26,15 @@ public class GuessNumber {
     public void play() {
         start();
         Player currentPlayer = firstPlayer;
+        SaveResult saveResult = SaveResult.OK;
         int number;
         do {
-            number = askNumber(currentPlayer);
-            currentPlayer.saveAttempt(number);
+            number = askNumber(currentPlayer, saveResult);
+            saveResult = currentPlayer.saveAttempt(number);
+            if (saveResult != SaveResult.OK) {
+                displayWarningMessage(saveResult);
+                continue;
+            }
             CheckResult checkResult = checkPlayerNumber(number);
             if (checkResult == CheckResult.EQUALS) {
                 displayVictoryMessage(currentPlayer);
@@ -39,15 +49,21 @@ public class GuessNumber {
         displayAttempts();
     }
 
+    private void displayWarningMessage(SaveResult saveResult) {
+        System.out.println(saveResult);
+    }
+
     private void start() {
+        validation.resetMarks();
         firstPlayer.start();
         secondPlayer.start();
         computerNumber = random.nextInt(1, 101);
         System.out.printf("Игра началась! У каждого игрока по %d попыток.%n", Player.ATTEMPTS_NUMBER);
     }
 
-    public int askNumber(Player player) {
-        System.out.printf("%n%s, ваш ход: ", player.getName());
+    public int askNumber(Player player, SaveResult saveResult) {
+        System.out.print(saveResult == SaveResult.OK ? ORDINAL_PROMPT.formatted(player.getName())
+                : PROMPT_ON_ERROR);
         return scanner.nextInt();
     }
 
