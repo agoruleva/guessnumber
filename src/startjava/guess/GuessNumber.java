@@ -5,30 +5,34 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class GuessNumber {
+    public static final int PLAYER_NUMBER = 3;
     private static final String ORDINAL_PROMPT = "%n%s, ваш ход: ";
     private static final String PROMPT_ON_ERROR = "Попробуйте ещё раз: ";
 
     private final NumberValidation validation;
-    private final Player firstPlayer;
-    private final Player secondPlayer;
+    private final Player[] players;
     private final Scanner scanner;
     private final Random random;
     private int computerNumber;
 
-    public GuessNumber(String firstName, String secondName, Scanner scanner) {
+    public GuessNumber(String[] names, Scanner scanner) {
         this.validation = new NumberValidation();
-        this.firstPlayer = new Player(firstName, validation);
-        this.secondPlayer = new Player(secondName, validation);
+        this.players = new Player[names.length];
+        for (int i = 0; i < players.length; ++i) {
+            players[i] = new Player(names[i], validation);
+        }
         this.scanner = scanner;
         this.random = new Random();
     }
 
     public void play() {
         start();
-        Player currentPlayer = firstPlayer;
+        int currentIndex = 0;
+        Player currentPlayer;
         SaveResult saveResult = SaveResult.OK;
         int number;
         do {
+            currentPlayer = players[currentIndex];
             number = askNumber(currentPlayer, saveResult);
             saveResult = currentPlayer.saveAttempt(number);
             if (saveResult != SaveResult.OK) {
@@ -44,7 +48,7 @@ public class GuessNumber {
                     displayLostMessage(currentPlayer);
                 }
             }
-            currentPlayer = currentPlayer == firstPlayer ? secondPlayer : firstPlayer;
+            currentIndex = (currentIndex + 1) % players.length;
         } while (number != computerNumber && currentPlayer.hasAttempts());
         displayAttempts();
     }
@@ -55,8 +59,9 @@ public class GuessNumber {
 
     private void start() {
         validation.resetMarks();
-        firstPlayer.start();
-        secondPlayer.start();
+        for (Player player : players) {
+            player.start();
+        }
         computerNumber = random.nextInt(1, 101);
         System.out.printf("Игра началась! У каждого игрока по %d попыток.%n", Player.ATTEMPTS_NUMBER);
     }
@@ -87,8 +92,9 @@ public class GuessNumber {
 
     private void displayAttempts() {
         System.out.printf("%nПопытки игроков:%n");
-        displayAttempts(firstPlayer);
-        displayAttempts(secondPlayer);
+        for (Player player : players) {
+            displayAttempts(player);
+        }
     }
 
     private static void displayAttempts(Player player) {

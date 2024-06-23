@@ -13,9 +13,11 @@ public class GuessNumberTest {
 
     public GuessNumberTest() {
         System.out.println("Представьтесь, пожалуйста:");
-        String firstName = askName(1);
-        String secondName = askName(2);
-        guessNumber = new GuessNumber(firstName, secondName, scanner);
+        String[] names = new String[GuessNumber.PLAYER_NUMBER];
+        for (int i = 0; i < names.length; ++i) {
+            names[i] = askName(i + 1);
+        }
+        guessNumber = new GuessNumber(names, scanner);
     }
 
     private String askName(int playerNumber) {
