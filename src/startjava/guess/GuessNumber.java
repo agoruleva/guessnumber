@@ -1,5 +1,7 @@
 package startjava.guess;
 
+import static startjava.guess.NumberValidation.*;
+
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
@@ -43,7 +45,7 @@ public class GuessNumber {
             if (checkResult == CheckResult.EQUALS) {
                 displayVictoryMessage(currentPlayer);
             } else {
-                displayHelp(number, checkResult);
+                displayHint(number, checkResult);
                 if (!currentPlayer.hasAttempts()) {
                     displayLostMessage(currentPlayer);
                 }
@@ -53,23 +55,45 @@ public class GuessNumber {
         displayAttempts();
     }
 
-    private void displayWarningMessage(SaveResult saveResult) {
-        System.out.println(saveResult);
-    }
-
     private void start() {
         validation.resetMarks();
+        shuffle();
         for (Player player : players) {
             player.start();
         }
-        computerNumber = random.nextInt(1, 101);
-        System.out.printf("Игра началась! У каждого игрока по %d попыток.%n", Player.ATTEMPTS_NUMBER);
+        computerNumber = random.nextInt(LOW, HIGH + 1);
+        displayStartMessage();
+    }
+
+    private void shuffle() {
+        for (int i = players.length - 1; i > 0; --i) {
+            final int j = random.nextInt(0, i + 1);
+            swap(i, j);
+        }
+    }
+
+    private void swap(int i, int j) {
+        final Player temp = players[i];
+        players[i] = players[j];
+        players[j] = temp;
+    }
+
+    private void displayStartMessage() {
+        System.out.printf("%nБрошен жребий. Очерёдность ходов:");
+        for (int i = 0; i < players.length; ++i) {
+            System.out.printf("%n%d. %s", i + 1, players[i].getName());
+        }
+        System.out.printf("%nИгра началась! У каждого игрока по %d попыток.%n", Player.ATTEMPTS_NUMBER);
     }
 
     public int askNumber(Player player, SaveResult saveResult) {
         System.out.print(saveResult == SaveResult.OK ? ORDINAL_PROMPT.formatted(player.getName())
                 : PROMPT_ON_ERROR);
         return scanner.nextInt();
+    }
+
+    private void displayWarningMessage(SaveResult saveResult) {
+        System.out.println(saveResult);
     }
 
     private CheckResult checkPlayerNumber(int number) {
@@ -82,7 +106,7 @@ public class GuessNumber {
                 player.getName(), computerNumber, player.getCount());
     }
 
-    private void displayHelp(int number, CheckResult result) {
+    private void displayHint(int number, CheckResult result) {
         System.out.printf("Число %d %s того, что загадал компьютер%n", number, result);
     }
 
