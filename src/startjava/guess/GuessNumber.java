@@ -30,11 +30,10 @@ public class GuessNumber {
     public void play() {
         start();
         int currentIndex = 0;
-        Player currentPlayer;
+        Player currentPlayer = players[currentIndex];
         SaveResult saveResult = SaveResult.OK;
         int number;
         do {
-            currentPlayer = players[currentIndex];
             number = askNumber(currentPlayer, saveResult);
             saveResult = currentPlayer.saveAttempt(number);
             if (saveResult != SaveResult.OK) {
@@ -51,6 +50,7 @@ public class GuessNumber {
                 }
             }
             currentIndex = (currentIndex + 1) % players.length;
+            currentPlayer = players[currentIndex];
         } while (number != computerNumber && currentPlayer.hasAttempts());
         displayAttempts();
     }
