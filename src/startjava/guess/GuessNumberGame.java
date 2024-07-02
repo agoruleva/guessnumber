@@ -2,7 +2,7 @@ package startjava.guess;
 
 import java.util.Scanner;
 
-public class GuessNumberTest {
+public class GuessNumberGame {
     private static final String PROMPT = "Хотите продолжить игру? [yes/no]: ";
     private static final String ALT_PROMPT = "Введите корректный ответ [yes/no]: ";
     private static final String NO = "no";
@@ -11,7 +11,7 @@ public class GuessNumberTest {
     private final Scanner scanner = new Scanner(System.in);
     private final GuessNumber guessNumber;
 
-    public GuessNumberTest() {
+    public GuessNumberGame() {
         System.out.println("Представьтесь, пожалуйста:");
         String[] names = new String[GuessNumber.PLAYER_NUMBER];
         for (int i = 0; i < names.length; ++i) {
@@ -36,11 +36,11 @@ public class GuessNumberTest {
     }
 
     private String askToContinue(String previous) {
-        System.out.printf("%n%s", YES.equals(previous) ? PROMPT : ALT_PROMPT);
+        System.out.printf("%s", YES.equals(previous) ? PROMPT : ALT_PROMPT);
         return scanner.next().toLowerCase();
     }
 
     public static void main(String[] args) {
-        new GuessNumberTest().run();
+        new GuessNumberGame().run();
     }
 }

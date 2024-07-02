@@ -7,15 +7,26 @@ import java.util.Arrays;
 public class Player {
     public static final int ATTEMPTS_NUMBER = 10;
 
+    private final int id;
     private final String name;
     private final int[] attempts;
-    private final NumberValidation validation;
     private int count;
 
-    public Player(String name, NumberValidation validation) {
+    public Player(int id, String name) {
+        this.id = id;
         this.name = name;
         this.attempts = new int[ATTEMPTS_NUMBER];
-        this.validation = validation;
+    }
+
+    private Player(Player player) {
+        this.id = player.id;
+        this.name = player.name;
+        this.attempts = Arrays.copyOf(player.attempts, player.attempts.length);
+        this.count = player.count;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -30,7 +41,7 @@ public class Player {
         return count;
     }
 
-    public SaveResult saveAttempt(int attempt) {
+    public SaveResult saveAttempt(int attempt, NumberValidation validation) {
         SaveResult result;
         if (!containsInRange(attempt)) {
             result = SaveResult.OUT_OF_RANGE;
@@ -47,7 +58,17 @@ public class Player {
         return count < ATTEMPTS_NUMBER;
     }
 
-    public void start() {
-        count = 0;
+    public Player copyInitial() {
+        return new Player(id, name);
+    }
+
+    public Player copy() {
+        return new Player(this);
+    }
+
+    public static void swap(Player[] players, int i, int j) {
+        final Player temp = players[i];
+        players[i] = players[j];
+        players[j] = temp;
     }
 }

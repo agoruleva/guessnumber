@@ -5,7 +5,19 @@ import java.util.Arrays;
 public class NumberValidation {
     public static final int LOW = 1;
     public static final int HIGH = 100;
-    private final boolean[] used = new boolean[HIGH - LOW + 1];
+    private final boolean[] used;
+
+    public NumberValidation() {
+        used = new boolean[HIGH - LOW + 1];
+    }
+
+    private NumberValidation(NumberValidation validation) {
+        this.used = Arrays.copyOf(validation.used, validation.used.length);
+    }
+
+    public NumberValidation copy() {
+        return new NumberValidation(this);
+    }
 
     public void resetMarks() {
         Arrays.fill(used, false);
