@@ -104,8 +104,9 @@ public class GuessNumberResult {
     }
 
     private void displayRoundWinners() {
-        if (roundWinnerCount > 0) {
-            System.out.printf("%nУгадывал%s:%n", roundWinnerCount > 1 ? "и" : "");
+        final int actualWinnerCount = getActualWinnerCount();
+        if (actualWinnerCount > 0) {
+            System.out.printf("%nУгадывал%s:%n", actualWinnerCount > 1 ? "и" : "");
             for (int i = 0; i < players.length; ++i) {
                 if (ranks[i] != 0) {
                     final int[] attempts = new int[ranks[i]];
@@ -121,5 +122,15 @@ public class GuessNumberResult {
             System.out.printf("%nУгадавших нет.%n");
         }
         System.out.println();
+    }
+
+    private int getActualWinnerCount() {
+        int actualWinnerCount = 0;
+        for (int rank : ranks) {
+            if (rank != 0) {
+                ++actualWinnerCount;
+            }
+        }
+        return actualWinnerCount;
     }
 }
