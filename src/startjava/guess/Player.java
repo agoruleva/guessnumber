@@ -41,17 +41,14 @@ public class Player {
         return count;
     }
 
-    public SaveResult saveAttempt(int attempt, NumberValidation validation) {
-        SaveResult result;
+    public void saveAttempt(int attempt, NumberValidation validation) {
         if (!containsInRange(attempt)) {
-            result = SaveResult.OUT_OF_RANGE;
+            throw new WrongInputException();
         } else if (!validation.markUsed(attempt)) {
-            result = SaveResult.REPEATED;
+            throw new RepeatedNumberException();
         } else {
             attempts[count++] = attempt;
-            result = SaveResult.OK;
         }
-        return result;
     }
 
     public boolean hasAttempts() {

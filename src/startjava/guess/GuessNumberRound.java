@@ -26,14 +26,16 @@ public class GuessNumberRound {
         start(n);
         int currentIndex = 0;
         Player currentPlayer = players[currentIndex];
+        String prompt = formOrdinalPrompt(currentPlayer);
         Player winner = null;
-        SaveResult saveResult = SaveResult.OK;
-        int number;
+        int number = 0;
         do {
-            number = askNumber(currentPlayer.getName(), saveResult);
-            saveResult = currentPlayer.saveAttempt(number, validation);
-            if (saveResult != SaveResult.OK) {
-                displayWarningMessage(saveResult);
+            try {
+                number = askNumber(prompt);
+                currentPlayer.saveAttempt(number, validation);
+            } catch (RuntimeException e) {
+                displayWarningMessage(e);
+                prompt = PROMPT_ON_ERROR;
                 continue;
             }
             CheckResult checkResult = checkPlayerNumber(number);
@@ -48,6 +50,7 @@ public class GuessNumberRound {
             }
             currentIndex = (currentIndex + 1) % players.length;
             currentPlayer = players[currentIndex];
+            prompt = formOrdinalPrompt(currentPlayer);
         } while (number != computerNumber && currentPlayer.hasAttempts());
         displayAttempts(players);
         return winner;
@@ -63,14 +66,21 @@ public class GuessNumberRound {
         System.out.printf("%nРаунд %d%n", n);
     }
 
-    public int askNumber(String name, SaveResult saveResult) {
-        System.out.print(saveResult == SaveResult.OK ? ORDINAL_PROMPT.formatted(name)
-                : PROMPT_ON_ERROR);
-        return scanner.nextInt();
+    private static String formOrdinalPrompt(Player currentPlayer) {
+        return ORDINAL_PROMPT.formatted(currentPlayer.getName());
     }
 
-    private static void displayWarningMessage(SaveResult saveResult) {
-        System.out.println(saveResult);
+    public int askNumber(String prompt) {
+        System.out.print(prompt);
+        try {
+            return Integer.parseInt(scanner.nextLine());
+        } catch (RuntimeException e) {
+            throw new WrongInputException(e);
+        }
+    }
+
+    private static void displayWarningMessage(RuntimeException e) {
+        System.out.println(e.getMessage());
     }
 
     private CheckResult checkPlayerNumber(int number) {
