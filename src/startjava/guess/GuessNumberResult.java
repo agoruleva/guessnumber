@@ -1,22 +1,19 @@
 package startjava.guess;
 
-import static startjava.guess.Player.swap;
-
 import java.util.Arrays;
 
 public class GuessNumberResult {
     private final Player[] players;
     private final int[] ranks;
-    private final int roundWinnerCount;
 
     public GuessNumberResult(Player[] players) {
-        this.players = filterWinners(players);
+        this.players = players;
         this.ranks = getRanks();
-        this.roundWinnerCount = calculateRoundWinnerCount(players);
     }
 
     public void determineGameWinners() {
         final TotalResult totalResult = getTotalResult();
+        final int roundWinnerCount = calculateRoundWinnerCount();
         if (totalResult.winnerCount() > 0) {
             if (totalResult.winnerCount() > 1 && totalResult.winnerCount() == roundWinnerCount) {
                 displayDrawMessage();
@@ -29,23 +26,13 @@ public class GuessNumberResult {
         displayRoundWinners();
     }
 
-    private static Player[] filterWinners(Player[] players) {
-        int winnerCount = 0;
-        for (int i = 0; i < players.length; ++i) {
-            if (players[i] != null) {
-                swap(players, winnerCount++, i);
-            }
-        }
-        return Arrays.copyOf(players, winnerCount);
-    }
-
     private int[] getRanks() {
         final boolean[] marked = new boolean[players.length];
         final int[] ranks = new int[players.length];
         for (int i = 0; i < players.length; ++i) {
-            if (!marked[i]) {
+            if (players[i] != null && !marked[i]) {
                 for (int j = i; j < players.length; ++j) {
-                    if (players[i].getId() == players[j].getId()) {
+                    if (players[j] != null && players[i].getId() == players[j].getId()) {
                         ++ranks[i];
                         marked[j] = true;
                     }
@@ -55,7 +42,7 @@ public class GuessNumberResult {
         return ranks;
     }
 
-    private static int calculateRoundWinnerCount(Player[] players) {
+    private int calculateRoundWinnerCount() {
         int winnerCount = 0;
         for (Player player : players) {
             if (player != null) {
@@ -108,11 +95,11 @@ public class GuessNumberResult {
         if (actualWinnerCount > 0) {
             System.out.printf("%nУгадывал%s:%n", actualWinnerCount > 1 ? "и" : "");
             for (int i = 0; i < players.length; ++i) {
-                if (ranks[i] != 0) {
-                    final int[] attempts = new int[ranks[i]];
+                if (players[i] != null && ranks[i] != 0) {
+                    final String[] attempts = new String[ranks[i]];
                     for (int j = 0, index = 0; j < players.length; ++j) {
-                        if (players[i].getId() == players[j].getId()) {
-                            attempts[index++] = players[j].getCount();
+                        if (players[j] != null && players[j].getId() == players[i].getId()) {
+                            attempts[index++] = String.format("%d: %d", j + 1, players[j].getCount());
                         }
                     }
                     System.out.printf("%s: %s%n", players[i].getName(), Arrays.toString(attempts));

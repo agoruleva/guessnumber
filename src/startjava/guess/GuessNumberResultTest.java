@@ -51,12 +51,12 @@ public class GuessNumberResultTest {
         twoRoundsDraw(players, 0);
 
         // Tests 16-18: two winners in three rounds
-        twoWinnersInTreeRounds(players, 2, attempt, validation);
-        twoWinnersInTreeRounds(players, 1, attempt, validation);
-        twoWinnersInTreeRounds(players, 0, attempt, validation);
+        twoWinnersInThreeRounds(players, 2, attempt, validation);
+        twoWinnersInThreeRounds(players, 1, attempt, validation);
+        twoWinnersInThreeRounds(players, 0, attempt, validation);
 
         // Test 19: one winner with minimal attempts in three rounds
-        winnerWithMinimalAttemptsInTreeRounds(players, attempt, validation);
+        winnerWithMinimalAttemptsInThreeRounds(players, attempt, validation);
 
         // Tests 20-23: winner with minimal attempts in two rounds
         winnerWithMinimalAttemptsInTwoRounds(players, attempt, validation, 1);
@@ -65,27 +65,27 @@ public class GuessNumberResultTest {
     }
 
     private static void overallLoss() {
-        System.out.printf("%nOverall loss");
+        System.out.print("Overall loss");
         final Player[] empty = new Player[ROUND_NUMBER];
         new GuessNumberResult(empty).determineGameWinners();
     }
 
     private static void totalWinner(Player winner) {
-        System.out.printf("%nTotal winner");
+        System.out.print("Total winner");
         final Player[] players = new Player[ROUND_NUMBER];
         Arrays.fill(players, winner);
         new GuessNumberResult(players).determineGameWinners();
     }
 
     private static void oneRoundWinner(Player player, int i) {
-        System.out.printf("%nOne player has won round #%d", i + 1);
+        System.out.printf("One player has won round #%d", i + 1);
         final Player[] players = new Player[ROUND_NUMBER];
         players[i] = player;
         new GuessNumberResult(players).determineGameWinners();
     }
 
     private static void twoRoundWinner(Player player, int i) {
-        System.out.printf("%nOne player has won all rounds but #%d", i + 1);
+        System.out.printf("One player has won all rounds but #%d", i + 1);
         final Player[] players = new Player[ROUND_NUMBER];
         Arrays.fill(players, player);
         players[i] = null;
@@ -93,7 +93,7 @@ public class GuessNumberResultTest {
     }
 
     private static void twoAndOneWinners(Player one, Player two, int second) {
-        System.out.printf("%nOne player has won round #%d and another has won remaining rounds",
+        System.out.printf("One player has won round #%d and another has won remaining rounds",
                 second + 1);
         final Player[] players = new Player[ROUND_NUMBER];
         Arrays.fill(players, one);
@@ -102,30 +102,30 @@ public class GuessNumberResultTest {
     }
 
     private static void overallDraw(Player[] winners) {
-        System.out.println("Overall draw");
+        System.out.print("Overall draw");
         final Player[] players = Arrays.copyOf(winners, winners.length);
         new GuessNumberResult(players).determineGameWinners();
     }
 
     private static void twoRoundsDraw(Player[] winners, int i) {
-        System.out.printf("%nLoss in round #%d and victory in remaining rounds", i + 1);
+        System.out.printf("Loss in round #%d and victory in remaining rounds", i + 1);
         final Player[] players = Arrays.copyOf(winners, winners.length);
         players[i] = null;
         new GuessNumberResult(players).determineGameWinners();
     }
 
-    private static void twoWinnersInTreeRounds(Player[] winners, int i, int attempt,
-                                               NumberValidation validation) {
-        System.out.printf("%nTwo winners with %d attempts, one with %d",
+    private static void twoWinnersInThreeRounds(Player[] winners, int i, int attempt,
+                                                NumberValidation validation) {
+        System.out.printf("Two winners with %d attempts, one with %d",
                 winners[i].getCount(), winners[i].getCount() + 1);
         final Player[] players = copyPlayers(winners);
         players[i].saveAttempt(++attempt, validation.copy());
         new GuessNumberResult(players).determineGameWinners();
     }
 
-    private static void winnerWithMinimalAttemptsInTreeRounds(Player[] winners, int attempt,
-                                                              NumberValidation validation) {
-        System.out.printf("%nWinner with minimal attempts in three rounds");
+    private static void winnerWithMinimalAttemptsInThreeRounds(Player[] winners, int attempt,
+                                                               NumberValidation validation) {
+        System.out.print("Winner with minimal attempts in three rounds");
         final Player[] players = copyPlayers(winners);
         NumberValidation localValidation = validation.copy();
         players[0].saveAttempt(++attempt, localValidation);
@@ -136,7 +136,7 @@ public class GuessNumberResultTest {
 
     private static void winnerWithMinimalAttemptsInTwoRounds(Player[] winners, int attempt,
                                                              NumberValidation validation, int i) {
-        System.out.printf("%nWinner with minimal attempts in two rounds");
+        System.out.print("Winner with minimal attempts in two rounds");
         final Player[] players = copyPlayers(winners);
         players[i].saveAttempt(++attempt, validation.copy());
         players[(i + 1) % players.length] = null;
