@@ -45,7 +45,7 @@ public class GuessNumberRound {
             } else {
                 displayHint(number, checkResult);
                 if (!currentPlayer.hasAttempts()) {
-                    displayLostMessage(currentPlayer.getName());
+                    displayLostMessage(currentPlayer);
                 }
             }
             currentIndex = (currentIndex + 1) % players.length;
@@ -66,8 +66,8 @@ public class GuessNumberRound {
         System.out.printf("%nРаунд %d%n", n);
     }
 
-    private static String formOrdinalPrompt(Player currentPlayer) {
-        return ORDINAL_PROMPT.formatted(currentPlayer.getName());
+    private static String formOrdinalPrompt(Player player) {
+        return ORDINAL_PROMPT.formatted(player);
     }
 
     public int askNumber(String prompt) {
@@ -90,15 +90,15 @@ public class GuessNumberRound {
 
     private void displayVictoryMessage(Player player) {
         System.out.printf("%s угадал число %d с %d-й попытки%n",
-                player.getName(), computerNumber, player.getCount());
+                player, computerNumber, player.getCount());
     }
 
     private static void displayHint(int number, CheckResult result) {
         System.out.printf("Число %d %s того, что загадал компьютер%n", number, result);
     }
 
-    private static void displayLostMessage(String name) {
-        System.out.printf("У %s закончились попытки!%n", name);
+    private static void displayLostMessage(Player player) {
+        System.out.printf("У %s закончились попытки!%n", player);
     }
 
     private static void displayAttempts(Player[] players) {
@@ -110,6 +110,6 @@ public class GuessNumberRound {
     }
 
     private static void displayAttempts(Player player) {
-        System.out.printf("%n%s: %s", player.getName(), Arrays.toString(player.getAttempts()));
+        System.out.printf("%n%s: %s", player, Arrays.toString(player.getAttempts()));
     }
 }

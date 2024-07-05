@@ -80,7 +80,7 @@ public class GuessNumberResult {
         System.out.printf("%nПобедител%c:", totalResult.winnerCount() > 1 ? 'и' : 'ь');
         for (int i = 0; i < players.length; ++i) {
             if (ranks[i] == totalResult.rank() && players[i].getCount() == totalResult.attemptCount()) {
-                System.out.printf("%n%s", players[i].getName());
+                System.out.printf("%n%s", players[i]);
             }
         }
         System.out.println();
@@ -102,7 +102,7 @@ public class GuessNumberResult {
                             attempts[index++] = String.format("%d: %d", j + 1, players[j].getCount());
                         }
                     }
-                    System.out.printf("%s: %s%n", players[i].getName(), Arrays.toString(attempts));
+                    System.out.printf("%s: %s%n", players[i], Arrays.toString(attempts));
                 }
             }
         } else {

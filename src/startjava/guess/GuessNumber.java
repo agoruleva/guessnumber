@@ -60,7 +60,7 @@ public class GuessNumber {
     private void displayStartMessage() {
         System.out.printf("%nБрошен жребий. Очерёдность ходов:%n");
         for (int i = 0; i < players.length; ++i) {
-            System.out.printf("%d. %s%n", i + 1, players[i].getName());
+            System.out.printf("%d. %s%n", i + 1, players[i]);
         }
         System.out.printf("%nИгра началась! В каждом раунде у игроков по %d попыток.%n",
                 Player.ATTEMPTS_NUMBER);

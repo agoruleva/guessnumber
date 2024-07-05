@@ -63,6 +63,11 @@ public class Player {
         return new Player(this);
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     public static void swap(Player[] players, int i, int j) {
         final Player temp = players[i];
         players[i] = players[j];
