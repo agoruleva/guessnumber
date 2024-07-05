@@ -3,7 +3,6 @@ package startjava.guess;
 import static startjava.guess.NumberValidation.HIGH;
 import static startjava.guess.NumberValidation.LOW;
 
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -102,7 +101,6 @@ public class GuessNumberRound {
     }
 
     private static void displayAttempts(Player[] players) {
-        System.out.printf("%nПопытки игроков:");
         for (Player player : players) {
             displayAttempts(player);
         }
@@ -110,6 +108,10 @@ public class GuessNumberRound {
     }
 
     private static void displayAttempts(Player player) {
-        System.out.printf("%n%s: %s", player, Arrays.toString(player.getAttempts()));
+        System.out.printf("%nПопытки игрока %s:", player);
+        final int[] playerAttempts = player.getAttempts();
+        for (int attempt : playerAttempts) {
+            System.out.printf("%3d", attempt);
+        }
     }
 }
