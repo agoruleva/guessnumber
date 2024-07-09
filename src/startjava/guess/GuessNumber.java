@@ -17,36 +17,30 @@ public class GuessNumber {
     public GuessNumber(String[] names, Scanner scanner) {
         this.players = createPlayers(names);
         this.random = new Random();
-        this.round = new GuessNumberRound(scanner, random);
+        this.round = new GuessNumberRound(players, scanner, random);
     }
 
     public static Player[] createPlayers(String[] names) {
         final Player[] players = new Player[names.length];
         for (int i = 0; i < players.length; ++i) {
-            players[i] = new Player(i + 1, names[i]);
+            players[i] = new Player(names[i]);
         }
         return players;
     }
 
     public void play() {
         start();
-        Player[] roundWinners = new Player[ROUND_NUMBER];
         for (int i = 0; i < ROUND_NUMBER; ++i) {
-            roundWinners[i] = round.play(i + 1, copyPlayers());
+            round.play(i + 1);
         }
-        new GuessNumberResult(roundWinners).determineGameWinners();
-    }
-
-    private Player[] copyPlayers() {
-        Player[] copy = new Player[players.length];
-        for (int i = 0; i < players.length; ++i) {
-            copy[i] = players[i].copyInitial();
-        }
-        return copy;
+        new GuessNumberResult(players).determineGameWinners();
     }
 
     private void start() {
         shuffle();
+        for (Player player : players) {
+            player.startGame();
+        }
         displayStartMessage();
     }
 

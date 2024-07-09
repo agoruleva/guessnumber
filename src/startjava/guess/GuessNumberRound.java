@@ -10,23 +10,24 @@ public class GuessNumberRound {
     private static final String ORDINAL_PROMPT = "%n%s, ваш ход: ";
     private static final String PROMPT_ON_ERROR = "Попробуйте ещё раз: ";
 
+    private final Player[] players;
     private final Scanner scanner;
     private final Random random;
     private final NumberValidation validation;
     private int computerNumber;
 
-    public GuessNumberRound(Scanner scanner, Random random) {
+    public GuessNumberRound(Player[] players, Scanner scanner, Random random) {
+        this.players = players;
         this.scanner = scanner;
         this.random = random;
         this.validation = new NumberValidation();
     }
 
-    public Player play(int n, Player[] players) {
-        start(n);
+    public void play(int i) {
+        start(i);
         int currentIndex = 0;
         Player currentPlayer = players[currentIndex];
         String prompt = formOrdinalPrompt(currentPlayer);
-        Player winner = null;
         int number = 0;
         do {
             try {
@@ -39,8 +40,8 @@ public class GuessNumberRound {
             }
             CheckResult checkResult = checkPlayerNumber(number);
             if (checkResult == CheckResult.EQUALS) {
+                currentPlayer.saveAttemptCount(i);
                 displayVictoryMessage(currentPlayer);
-                winner = currentPlayer;
             } else {
                 displayHint(number, checkResult);
                 if (!currentPlayer.hasAttempts()) {
@@ -51,18 +52,20 @@ public class GuessNumberRound {
             currentPlayer = players[currentIndex];
             prompt = formOrdinalPrompt(currentPlayer);
         } while (number != computerNumber && currentPlayer.hasAttempts());
-        displayAttempts(players);
-        return winner;
+        displayAttempts();
     }
 
     private void start(int n) {
+        for (Player player : players) {
+            player.startRound();
+        }
         validation.resetMarks();
         computerNumber = random.nextInt(LOW, HIGH + 1);
         displayStartMessage(n);
     }
 
-    private static void displayStartMessage(int n) {
-        System.out.printf("%nРаунд %d%n", n);
+    private static void displayStartMessage(int i) {
+        System.out.printf("%nРаунд %d%n", i + 1);
     }
 
     private static String formOrdinalPrompt(Player player) {
@@ -89,7 +92,7 @@ public class GuessNumberRound {
 
     private void displayVictoryMessage(Player player) {
         System.out.printf("%s угадал число %d с %d-й попытки%n",
-                player, computerNumber, player.getCount());
+                player, computerNumber, player.getAttemptCount());
     }
 
     private static void displayHint(int number, CheckResult result) {
@@ -100,7 +103,7 @@ public class GuessNumberRound {
         System.out.printf("У %s закончились попытки!%n", player);
     }
 
-    private static void displayAttempts(Player[] players) {
+    private void displayAttempts() {
         for (Player player : players) {
             displayAttempts(player);
         }

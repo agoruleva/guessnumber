@@ -1,19 +1,33 @@
 package startjava.guess;
 
+import static startjava.guess.GuessNumber.ROUND_NUMBER;
+import static startjava.guess.Player.MAX_ATTEMPTS_NUMBER;
+import static startjava.guess.Player.MAX_PENALTY;
+import static startjava.guess.Player.PENALTY;
+
 import java.util.Arrays;
 
 public class GuessNumberResult {
     private final Player[] players;
-    private final int[] ranks;
+    private final int[] attemptSums;
+    private final int roundWinnerCount;
 
     public GuessNumberResult(Player[] players) {
         this.players = players;
-        this.ranks = getRanks();
+        this.attemptSums = calculateAttemptSums();
+        this.roundWinnerCount = calculateRoundWinnerCount();
+    }
+
+    private int[] calculateAttemptSums() {
+        final int[] sums = new int[players.length];
+        for (int i = 0; i < players.length; ++i) {
+            sums[i] = players[i].getAttemptSum();
+        }
+        return sums;
     }
 
     public void determineGameWinners() {
         final TotalResult totalResult = getTotalResult();
-        final int roundWinnerCount = calculateRoundWinnerCount();
         if (totalResult.winnerCount() > 0) {
             if (totalResult.winnerCount() > 1 && totalResult.winnerCount() == roundWinnerCount) {
                 displayDrawMessage();
@@ -26,50 +40,30 @@ public class GuessNumberResult {
         displayRoundWinners();
     }
 
-    private int[] getRanks() {
-        final boolean[] marked = new boolean[players.length];
-        final int[] ranks = new int[players.length];
-        for (int i = 0; i < players.length; ++i) {
-            if (players[i] != null && !marked[i]) {
-                for (int j = i; j < players.length; ++j) {
-                    if (players[j] != null && players[i].getId() == players[j].getId()) {
-                        ++ranks[i];
-                        marked[j] = true;
-                    }
-                }
-            }
-        }
-        return ranks;
-    }
-
     private int calculateRoundWinnerCount() {
         int winnerCount = 0;
-        for (Player player : players) {
-            if (player != null) {
+        for (int sum : attemptSums) {
+            if (sum < MAX_PENALTY) {
                 ++winnerCount;
             }
         }
         return winnerCount;
     }
 
-    private record TotalResult(int rank, int attemptCount, int winnerCount) {}
+    private record TotalResult(int attemptSum, int winnerCount) {}
 
     private TotalResult getTotalResult() {
-        int maxRank = 0;
-        int minAttempt = Player.ATTEMPTS_NUMBER;
+        int minAttemptSum = MAX_ATTEMPTS_NUMBER;
         int winnerCount = 0;
-        for (int i = 0; i < players.length; ++i) {
-            if (ranks[i] > 0) {
-                if (ranks[i] > maxRank || (ranks[i] == maxRank && players[i].getCount() < minAttempt)) {
-                    maxRank = ranks[i];
-                    minAttempt = players[i].getCount();
-                    winnerCount = 1;
-                } else if (ranks[i] == maxRank && players[i].getCount() == minAttempt) {
-                    ++winnerCount;
-                }
+        for (int sum : attemptSums) {
+            if (sum < minAttemptSum) {
+                minAttemptSum = sum;
+                winnerCount = 1;
+            } else if (sum == minAttemptSum) {
+                ++winnerCount;
             }
         }
-        return new TotalResult(maxRank, minAttempt, winnerCount);
+        return new TotalResult(minAttemptSum, winnerCount);
     }
 
     private static void displayDrawMessage() {
@@ -79,7 +73,7 @@ public class GuessNumberResult {
     private void displayWinners(TotalResult totalResult) {
         System.out.printf("%nПобедител%c:", totalResult.winnerCount() > 1 ? 'и' : 'ь');
         for (int i = 0; i < players.length; ++i) {
-            if (ranks[i] == totalResult.rank() && players[i].getCount() == totalResult.attemptCount()) {
+            if (attemptSums[i] == totalResult.attemptSum()) {
                 System.out.printf("%n%s", players[i]);
             }
         }
@@ -91,33 +85,22 @@ public class GuessNumberResult {
     }
 
     private void displayRoundWinners() {
-        final int actualWinnerCount = getActualWinnerCount();
-        if (actualWinnerCount > 0) {
-            System.out.printf("%nУгадывал%s:%n", actualWinnerCount > 1 ? "и" : "");
-            for (int i = 0; i < players.length; ++i) {
-                if (players[i] != null && ranks[i] != 0) {
-                    final String[] attempts = new String[ranks[i]];
-                    for (int j = 0, index = 0; j < players.length; ++j) {
-                        if (players[j] != null && players[j].getId() == players[i].getId()) {
-                            attempts[index++] = String.format("%d: %d", j + 1, players[j].getCount());
-                        }
+        if (roundWinnerCount > 0) {
+            System.out.printf("%nУгадывал%s:%n", roundWinnerCount > 1 ? "и" : "");
+            for (Player player : players) {
+                final String[] attempts = new String[player.getScore()];
+                for (int j = 0, index = 0; j < ROUND_NUMBER; ++j) {
+                    if (player.getRoundAttempts(j) < PENALTY) {
+                        attempts[index++] = String.format("%d: %d", j + 1, player.getRoundAttempts(j));
                     }
-                    System.out.printf("%s: %s%n", players[i], Arrays.toString(attempts));
+                }
+                if (attempts.length > 0) {
+                    System.out.printf("%s: %s%n", player, Arrays.toString(attempts));
                 }
             }
         } else {
             System.out.printf("%nУгадавших нет.%n");
         }
         System.out.println();
-    }
-
-    private int getActualWinnerCount() {
-        int actualWinnerCount = 0;
-        for (int rank : ranks) {
-            if (rank != 0) {
-                ++actualWinnerCount;
-            }
-        }
-        return actualWinnerCount;
     }
 }
