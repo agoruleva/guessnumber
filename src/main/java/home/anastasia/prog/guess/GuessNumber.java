@@ -1,6 +1,6 @@
-package startjava.guess;
+package home.anastasia.prog.guess;
 
-import static startjava.guess.Player.swap;
+import static home.anastasia.prog.guess.Player.swap;
 
 import java.util.Random;
 import java.util.Scanner;

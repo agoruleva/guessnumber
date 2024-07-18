@@ -1,7 +1,7 @@
-package startjava.guess;
+package home.anastasia.prog.guess;
 
-import static startjava.guess.NumberValidation.HIGH;
-import static startjava.guess.NumberValidation.LOW;
+import static home.anastasia.prog.guess.NumberValidation.HIGH;
+import static home.anastasia.prog.guess.NumberValidation.LOW;
 
 public class WrongInputException extends RuntimeException {
     private static final String MESSAGE = "Ожидается число в интервале [%d, %d].".formatted(LOW, HIGH);

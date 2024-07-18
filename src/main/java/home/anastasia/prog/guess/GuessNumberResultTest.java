@@ -1,7 +1,7 @@
-package startjava.guess;
+package home.anastasia.prog.guess;
 
-import static startjava.guess.GuessNumber.PLAYER_NUMBER;
-import static startjava.guess.GuessNumber.ROUND_NUMBER;
+import static home.anastasia.prog.guess.GuessNumber.PLAYER_NUMBER;
+import static home.anastasia.prog.guess.GuessNumber.ROUND_NUMBER;
 
 public class GuessNumberResultTest {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package startjava.guess;
+package home.anastasia.prog.guess;
 
 public class RepeatedNumberException extends RuntimeException {
     private static final String MESSAGE = "Число введено повторно.";

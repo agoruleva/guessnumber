@@ -1,7 +1,7 @@
-package startjava.guess;
+package home.anastasia.prog.guess;
 
-import static startjava.guess.GuessNumber.ROUND_NUMBER;
-import static startjava.guess.NumberValidation.containsInRange;
+import static home.anastasia.prog.guess.GuessNumber.ROUND_NUMBER;
+import static home.anastasia.prog.guess.NumberValidation.containsInRange;
 
 import java.util.Arrays;
 

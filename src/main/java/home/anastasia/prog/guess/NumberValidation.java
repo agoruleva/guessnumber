@@ -1,4 +1,4 @@
-package startjava.guess;
+package home.anastasia.prog.guess;
 
 import java.util.Arrays;
 

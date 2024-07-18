@@ -1,9 +1,9 @@
-package startjava.guess;
+package home.anastasia.prog.guess;
 
-import static startjava.guess.GuessNumber.ROUND_NUMBER;
-import static startjava.guess.Player.MAX_ATTEMPTS_NUMBER;
-import static startjava.guess.Player.MAX_PENALTY;
-import static startjava.guess.Player.PENALTY;
+import static home.anastasia.prog.guess.GuessNumber.ROUND_NUMBER;
+import static home.anastasia.prog.guess.Player.MAX_ATTEMPTS_NUMBER;
+import static home.anastasia.prog.guess.Player.MAX_PENALTY;
+import static home.anastasia.prog.guess.Player.PENALTY;
 
 import java.util.Arrays;
 

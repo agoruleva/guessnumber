@@ -1,4 +1,4 @@
-package startjava.guess;
+package home.anastasia.prog.guess;
 
 public enum CheckResult {
     EQUALS("равно"),

@@ -1,7 +1,7 @@
-package startjava.guess;
+package home.anastasia.prog.guess;
 
-import static startjava.guess.NumberValidation.HIGH;
-import static startjava.guess.NumberValidation.LOW;
+import static home.anastasia.prog.guess.NumberValidation.HIGH;
+import static home.anastasia.prog.guess.NumberValidation.LOW;
 
 import java.util.Random;
 import java.util.Scanner;
